@@ -1,0 +1,59 @@
+#!/usr/bin/env node
+
+require('dotenv').config();
+
+const { normalizePort } = require('./utils/utils'),
+  debug = require('debug')('node-passport-template:server'),
+  http = require('http'),
+  app = require('../app'),
+  port = normalizePort(process.env.PORT || '3000');
+
+app.set('port', port);
+
+const server = http.createServer(app),
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+onError = (error) => {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+  
+  const bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+  
+  // Friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+},
+  
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+onListening = () => {
+  const addr = server.address(),
+    bind = typeof addr === 'string'
+      ? 'pipe ' + addr
+      : 'port ' + addr.port;
+
+  debug('Listening on ' + bind);
+};
+
+server.listen(port, process.env.HOSTNAME, () => {
+  console.info(`Server started on ${process.env.HOSTNAME}:${port}`);
+});
+
+server.on('error', onError);
+server.on('listening', onListening);
