@@ -1,15 +1,13 @@
 const express = require('express'),
-    router = express.Router();
-
+  router = express.Router(),
+  { httpResponseConflict,
+    httpResponseNotAceptable,
+    httpResponseOk
+  } = require('../core/middleware/http-response');
+  
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  const data = { message: '', data: {} };
-
-  res.writeHead(200, {
-    'Content-Length': Buffer.byteLength(data),
-    'Content-Type': 'application/json',
-  })
-  .end(data);
+router.get('/', (req, res, next) => {
+  httpResponseOk(res, '', {});
 });
 
 module.exports = router;

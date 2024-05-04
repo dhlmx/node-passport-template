@@ -13,38 +13,38 @@ DELETE http://localhost:3000/users/662feb441f4d170f050ce528
 
 ###
 
-GET http://localhost:3000/users/
+GET http://localhost:3000/users
 
 ###
 
-GET http://localhost:3000/users/662ecf8b7897e24eca74a899
+GET http://localhost:3000/users/6633292202547ea078c61684
 
 ###
 
-GET http://localhost:3000/users/662ecf8b7897e24eca74a899/algomas
+GET http://localhost:3000/users/6633292202547ea078c61684/algomas
 
 ###
 
-POST http://localhost:3000/users/
+POST http://localhost:3000/users
 content-type: application/json
 
 {
-    "name": "sample",
-    "email": "sample@hotmail.com",
-    "userName": "sampling",
-    "password": "P4$$w0rd",
-    "profileImage": "image"
+    "email": "sample10@hotmail.com",
+    "name": "sample10",
+    "password": "password10",
+    "profileImage": "",
+    "userName": "sampling10"
 }
 
 ###
 
-PUT http://localhost:3000/users/662f36164f8144bfcd1d9c82
+PUT http://localhost:3000/users/6633292202547ea078c61684
 content-type: application/json
 
 {
-    "name": "sample03",
-    "email": "sample03@hotmail.com",
-    "userName": "sampling03",
-    "password": "P4$$w0rd03",
-    "profileImage": "image03"
+    "name": "sample8-2",
+    "email": "sample8-2@hotmail.com",
+    "userName": "sampling8-2",
+    "password": "P4$$w0rd8-2",
+    "profileImage": "image8-2"
 }

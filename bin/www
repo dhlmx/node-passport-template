@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
 require('dotenv').config();
+require('colors');
 
-const { normalizePort } = require('./utils/utils'),
+const { normalizePort } = require('../core/utils/utils'),
   debug = require('debug')('node-passport-template:server'),
   http = require('http'),
   app = require('../app'),
@@ -52,7 +53,8 @@ onListening = () => {
 };
 
 server.listen(port, process.env.HOSTNAME, () => {
-  console.info(`Server started on ${process.env.HOSTNAME}:${port}`);
+  const message = `Server running in ${process.env.NODE_ENV.toUpperCase()} mode on port ${port}`;
+  console.info(message.green.bold);
 });
 
 server.on('error', onError);

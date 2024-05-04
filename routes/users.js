@@ -1,64 +1,55 @@
 const express = require('express'),
   router = express.Router(),
-  User = require('../data/models/user');
+  User = require('../data/models/user'),
+  { httpResponseConflict,
+    httpResponseNotAceptable,
+    httpResponseOk
+  } = require('../core/middleware/http-response');
 
-router.delete('/:id', (req, res, next) => {
-  User.findByIdAndDelete(req.params.id).then(user => {
-    res.writeHead(200, {
-      'Content-Length': Buffer.byteLength(JSON.stringify(user)),
-      'Content-Type': 'application/json',
-    }).end(JSON.stringify(user));
+router.get('', (req, res, next) => {
+  User.find().sort({ name: 1}).then(users => {
+    httpResponseOk(res, '', users);
   }).catch(err => {
-    console.error(`ERROR: DELETE /users/:id`, req.params.id, err);
-    return next(err);
-  });
-});
-
-router.get('/', (req, res, next) => {
-  User.find().then(users => {
-    res.writeHead(200, {
-      'Content-Length': Buffer.byteLength(JSON.stringify(users)),
-      'Content-Type': 'application/json',
-    }).end(JSON.stringify(users));
-  }).catch(err => {
-    console.error(`ERROR: GET /users/`, err);
-    return next(err);
+    next(err);
   });
 });
 
 router.get('/:id', (req, res, next) => {
   User.findById(req.params.id).then(user => {
-    res.writeHead(200, {
-      'Content-Length': Buffer.byteLength(JSON.stringify(user)),
-      'Content-Type': 'application/json',
-    }).end(JSON.stringify(user));
+    httpResponseOk(res, '', user);
   }).catch(err => {
-    console.error(`ERROR: GET /users/:id`, req.body, err);
-    return next(err);
+    next(err);
   });
 });
 
-router.post('/', (req, res, next) => {
+router.post('', (req, res, next) => {
   User.create({ ...req.body }).then(user => {
-    res.writeHead(201, {
-      'Content-Length': Buffer.byteLength(JSON.stringify(user)),
-      'Content-Type': 'application/json',
-    }).end(JSON.stringify(user));
+    httpResponseOk(res, '', user);
   }).catch(err => {
-    console.error(`ERROR: POST /users/`, req.body, err);
-    return next(err);
+    if (err.code === 11000) {
+      httpResponseConflict(res, 'Index or constraint conflict', err);
+    } else if (err.name === 'ValidationError') {
+      const errorMessages = Object.keys(err.errors).map(fieldError => err.errors[fieldError].message);
+      httpResponseNotAceptable(res, 'Validation error', errorMessages);
+    } else {
+      next(err);
+    }
+  });
+});
+
+router.delete('/:id', (req, res, next) => {
+  User.findByIdAndDelete(req.params.id).then(user => {
+    httpResponseOk(res, '', user);
+  }).catch(err => {
+    next(err);
   });
 });
 
 router.put('/:id', (req, res, next) => {
   User.findByIdAndUpdate(req.params.id, { ...req.body }).then(user => {
-    res.writeHead(200, {
-      'Content-Length': Buffer.byteLength(JSON.stringify(user)),
-      'Content-Type': 'application/json',
-    }).end(JSON.stringify(user));
+    httpResponseOk(res, '', user);
   }).catch(err => {
-    console.error(`ERROR: PUT users/:id`, req.params, req.body, err);
-    return next(err);
+    next(err);
   });
 });
 
